@@ -1,0 +1,26 @@
+/* styles.css - shared site styles */
+:root{
+  --bg:#f7fafc; --card:#fff; --accent:#0b79d0; --muted:#6b7280;
+  --success:#16a34a; --danger:#ef4444;
+}
+*{box-sizing:border-box}
+body{font-family:Inter,system-ui,Arial; margin:0; background:var(--bg); color:#111827;}
+.container{max-width:980px;margin:28px auto;padding:16px}
+.header{ text-align:center; margin-bottom:18px}
+.card{background:var(--card); border-radius:12px; padding:18px; box-shadow:0 6px 18px rgba(15,23,42,0.06); margin-bottom:16px}
+h1,h2{margin:0 0 8px 0}
+label{display:block;margin-bottom:8px;color:var(--muted);font-size:14px}
+input, select, textarea{width:100%; padding:10px 12px; border-radius:8px; border:1px solid #e5e7eb; margin-top:6px; font-size:15px}
+.actions{display:flex; gap:8px; margin-top:12px}
+button{background:var(--accent); color:#fff; padding:10px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:600}
+button.secondary{background:#6b7280}
+small.muted{color:var(--muted)}
+#qrcode{margin-top:12px; padding:8px; background:#fff; display:inline-block; border-radius:8px}
+.result, .verify{margin-top:12px}
+.hidden{display:none}
+.reader-wrap{max-width:420px;margin:12px auto}
+.doc-info{margin-top:10px; display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.details{background:#f9fafb; padding:10px; border-radius:8px; border:1px solid #eef2f7}
+footer{text-align:center;margin-top:18px;color:var(--muted)}
+.nav{display:flex; gap:12px; margin-bottom:12px; flex-wrap:wrap}
+.nav a{color:var(--accent); text-decoration:none; font-weight:600}
