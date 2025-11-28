@@ -1,0 +1,38 @@
+<!-- verify_qr.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Verify QR</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+  <script type="module" src="verify_app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>Verify QR</h1></div>
+
+    <div class="nav">
+      <a href="user_dashboard.html">User</a>
+      <a href="police_dashboard.html">Police</a>
+    </div>
+
+    <div class="card">
+      <div id="reader" class="reader-wrap"></div>
+      <div class="scanner-controls">
+        <button id="startScan">Start Scan</button>
+        <button id="stopScan" disabled>Stop Scan</button>
+      </div>
+
+      <div id="verifyResult" class="verify hidden">
+        <h3>Verification Result</h3>
+        <p id="statusText"></p>
+        <div id="details" class="details"></div>
+      </div>
+    </div>
+
+    <footer><small class="muted">Smart Traffic Verification</small></footer>
+  </div>
+</body>
+</html>
