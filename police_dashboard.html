@@ -1,0 +1,44 @@
+<!-- police_dashboard.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Police Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>Police Dashboard</h1></div>
+
+    <div class="nav">
+      <a href="verify_qr.html">Scan QR (Camera)</a>
+      <a href="vehicle_register.html">(Optional) Register Vehicle</a>
+      <a id="logoutLink" href="#">Logout</a>
+    </div>
+
+    <div class="card">
+      <h2>Welcome Officer</h2>
+      <p class="muted">Use scanner to verify vehicle details instantly.</p>
+    </div>
+
+    <footer><small class="muted">Smart Traffic Verification</small></footer>
+  </div>
+
+  <script type="module">
+    import { auth } from './firebase-config.js';
+    import { signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    document.getElementById('logoutLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await signOut(auth);
+      window.location = 'index.html';
+    });
+
+    onAuthStateChanged(auth, user => {
+      if (!user) window.location = 'index.html';
+      // You can also verify role in Firestore here if needed
+    });
+  </script>
+</body>
+</html>
