@@ -5,7 +5,161 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Smart Traffic — Login</title>
-  <link rel="stylesheet" href="styles.css" />
+ 
+  <style>
+    /* ============================
+   Smart Traffic Login UI
+   Professional Clean Design
+=============================*/
+
+/* Color Theme */
+:root {
+  --bg: #eaf3ff;
+  --card-bg: #ffffffcc;
+  --primary: #0b79d0;
+  --primary-hover: #085a9d;
+  --text-dark: #1a2533;
+  --text-muted: #6b7280;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,0.12);
+  --transition: 0.3s ease;
+}
+
+/* Base Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: "Inter", system-ui, Arial, sans-serif;
+  background: linear-gradient(135deg, #d0e7ff, #ffffff);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dark);
+}
+
+/* Center container */
+.container {
+  width: 100%;
+  max-width: 420px;
+  padding: 20px;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 18px;
+}
+.header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.header p {
+  font-size: 15px;
+  color: var(--text-muted);
+}
+
+/* Card */
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow);
+  animation: fadeIn 0.4s ease;
+}
+
+.card h2 {
+  font-size: 22px;
+  margin-bottom: 14px;
+  font-weight: 600;
+}
+
+/* Form Controls */
+label {
+  font-size: 14px;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 6px;
+}
+input, select {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: var(--radius);
+  border: 1px solid #d5d9e1;
+  margin-bottom: 14px;
+  font-size: 15px;
+  transition: var(--transition);
+}
+input:focus, select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(11,121,208,0.2);
+  outline: none;
+}
+
+/* Buttons */
+button {
+  flex: 1;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: var(--transition);
+}
+button#loginBtn {
+  background: var(--primary);
+  color: #fff;
+}
+button#loginBtn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+}
+button.secondary {
+  background: #6b7280;
+  color: white;
+}
+button.secondary:hover {
+  background: #545b63;
+  transform: translateY(-2px);
+}
+
+/* Buttons container */
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Footer */
+footer {
+  margin-top: 16px;
+  text-align: center;
+}
+footer small {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Mobile Responsiveness */
+@media(max-width: 480px) {
+  .header h1 { font-size: 24px; }
+  .card { padding: 18px; }
+  .actions { flex-direction: column; }
+}
+
+  </style>
 </head>
 <body>
   <div class="container">
