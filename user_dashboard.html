@@ -1,0 +1,47 @@
+<!-- user_dashboard.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>User Dashboard</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>User Dashboard</h1>
+    </div>
+
+    <div class="nav">
+      <a href="vehicle_register.html">Register Vehicle / Generate QR</a>
+      <a href="verify_qr.html">Verify QR (Camera)</a>
+      <a id="logoutLink" href="#">Logout</a>
+    </div>
+
+    <div class="card">
+      <h2>Welcome</h2>
+      <p class="muted">Use menu above to register a vehicle or verify a QR code.</p>
+    </div>
+
+    <footer><small class="muted">Smart Traffic Verification</small></footer>
+  </div>
+
+  <script type="module">
+    import { auth } from './firebase-config.js';
+    import { signOut } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+
+    document.getElementById('logoutLink').addEventListener('click', async (e) => {
+      e.preventDefault();
+      await signOut(auth);
+      window.location = 'index.html';
+    });
+
+    // optional: protect page — redirect if not logged in
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-auth.js";
+    onAuthStateChanged(auth, user => {
+      if (!user) window.location = 'index.html';
+    });
+  </script>
+</body>
+</html>
