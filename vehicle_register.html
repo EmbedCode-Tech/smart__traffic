@@ -1,0 +1,60 @@
+<!-- vehicle_register.html -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Register Vehicle</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script type="module" src="vehicle_app.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <div class="header"><h1>Register Vehicle / Generate QR</h1></div>
+
+    <div class="nav">
+      <a href="user_dashboard.html">Dashboard</a>
+      <a href="verify_qr.html">Verify QR</a>
+    </div>
+
+    <div class="card">
+      <form id="registerForm">
+        <label>Full Name</label>
+        <input id="name" required placeholder="Rohit Jadhav" />
+
+        <label>Vehicle Number</label>
+        <input id="vehicle" required placeholder="MH09AB1234" />
+
+        <label>License Number</label>
+        <input id="license" required placeholder="DL-0123456789" />
+
+        <label>Insurance Expiry</label>
+        <input id="expiry" type="date" required />
+
+        <label>PUC Number</label>
+        <input id="pucNumber" required placeholder="PUC-000123" />
+
+        <label>PUC Expiry</label>
+        <input id="pucExpiry" type="date" required />
+
+        <div class="actions">
+          <button type="submit">Save & Generate QR</button>
+          <button type="button" id="clearForm" class="secondary">Clear</button>
+        </div>
+      </form>
+
+      <div id="result" class="result hidden">
+        <h3>QR Code</h3>
+        <div id="qrcode"></div>
+        <div class="doc-info">
+          <p><strong>Document ID:</strong> <span id="docId"></span></p>
+          <button id="downloadQR">Download QR</button>
+        </div>
+      </div>
+    </div>
+
+    <footer><small class="muted">Smart Traffic Verification</small></footer>
+  </div>
+</body>
+</html>
