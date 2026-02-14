@@ -1,66 +1,34 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Verify QR</title>
-
-
-
-  <style>
-    body {
-      font-family: Arial;
-      text-align: center;
-      background: #f2f2f2;
-    }
-
-    .container {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-
-    #reader {
-      width: 100%;
-      margin-bottom: 15px;
-    }
-
-    button {
-      padding: 10px 20px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    #startScan { background: green; color: white; }
-    #stopScan { background: red; color: white; }
-
-    .hidden { display: none; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verify QR</title>
+<style>
+  body { font-family: Arial; text-align: center; }
+  #reader { width: 100%; margin-bottom: 10px; }
+  button { padding: 10px 20px; margin: 5px; }
+  .hidden { display: none; }
+</style>
 </head>
-
 <body>
 
-<div class="container">
-  <h2>Verify QR</h2>
+<h2>Verify QR</h2>
+<div id="reader"></div>
 
-  <div id="reader"></div>
+<button id="startScan">Start Scan</button>
+<button id="stopScan" disabled>Stop Scan</button>
 
-  <button id="startScan">Start Scan</button>
-  <button id="stopScan" disabled>Stop Scan</button>
-
-  <div id="verifyResult" class="hidden">
-    <h3>Result</h3>
-    <p id="statusText"></p>
-    <div id="details"></div>
-  </div>
+<div id="verifyResult" class="hidden">
+  <h3>Result</h3>
+  <p id="statusText"></p>
+  <div id="details"></div>
 </div>
 
-  <script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+<!-- Load html5-qrcode first -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/minified/html5-qrcode.min.js"></script>
+
+<!-- Load your JS last, without defer -->
 <script src="verify_app.js"></script>
 
 </body>
