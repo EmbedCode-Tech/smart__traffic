@@ -1,65 +1,72 @@
-const startBtn = document.getElementById("startScan");
-const stopBtn = document.getElementById("stopScan");
-const resultBox = document.getElementById("verifyResult");
-const statusText = document.getElementById("statusText");
-const detailsDiv = document.getElementById("details");
+document.addEventListener("DOMContentLoaded", function () {
 
-const html5QrCode = new Html5Qrcode("reader");
-let scanning = false;
+  const startBtn = document.getElementById("startScan");
+  const stopBtn = document.getElementById("stopScan");
+  const resultBox = document.getElementById("verifyResult");
+  const statusText = document.getElementById("statusText");
+  const detailsDiv = document.getElementById("details");
 
-// 🔹 Change this to your expected QR value
-const VALID_QR_DATA = "TRAFFIC-VALID-12345";
+  let html5QrCode;
+  let scanning = false;
 
-startBtn.addEventListener("click", async () => {
-  try {
-    await html5QrCode.start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: 250
-      },
-      onScanSuccess,
-      onScanError
-    );
+  const VALID_QR_DATA = "TRAFFIC-VALID-12345";
 
-    scanning = true;
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
+  startBtn.addEventListener("click", async function () {
 
-  } catch (err) {
-    alert("Camera error: " + err);
+    try {
+      html5QrCode = new Html5Qrcode("reader");
+
+      const devices = await Html5Qrcode.getCameras();
+
+      if (devices.length === 0) {
+        alert("No camera found");
+        return;
+      }
+
+      const cameraId = devices[0].id;
+
+      await html5QrCode.start(
+        cameraId,
+        { fps: 10, qrbox: 250 },
+        function (decodedText) {
+
+          resultBox.classList.remove("hidden");
+
+          if (decodedText === VALID_QR_DATA) {
+            statusText.innerText = "✅ Data is Correct";
+            statusText.style.color = "green";
+          } else {
+            statusText.innerText = "❌ Invalid QR Code";
+            statusText.style.color = "red";
+          }
+
+          detailsDiv.innerHTML =
+            "<p><strong>QR Content:</strong> " + decodedText + "</p>";
+
+          stopScanner();
+        }
+      );
+
+      scanning = true;
+      startBtn.disabled = true;
+      stopBtn.disabled = false;
+
+    } catch (err) {
+      console.error(err);
+      alert("Camera error: " + err.message);
+    }
+  });
+
+  stopBtn.addEventListener("click", stopScanner);
+
+  async function stopScanner() {
+    if (html5QrCode && scanning) {
+      await html5QrCode.stop();
+      await html5QrCode.clear();
+      scanning = false;
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+    }
   }
+
 });
-
-stopBtn.addEventListener("click", async () => {
-  if (scanning) {
-    await html5QrCode.stop();
-    scanning = false;
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
-  }
-});
-
-function onScanSuccess(decodedText) {
-
-  resultBox.classList.remove("hidden");
-
-  if (decodedText === VALID_QR_DATA) {
-    statusText.innerText = "✅ Data is Correct";
-    statusText.className = "success";
-  } else {
-    statusText.innerText = "❌ Invalid QR Code";
-    statusText.className = "error";
-  }
-
-  detailsDiv.innerHTML = `<p><strong>QR Content:</strong> ${decodedText}</p>`;
-
-  // Stop after scan
-  html5QrCode.stop();
-  startBtn.disabled = false;
-  stopBtn.disabled = true;
-}
-
-function onScanError(errorMessage) {
-  // ignore minor scan errors
-}
