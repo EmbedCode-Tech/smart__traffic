@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("load", function () {
 
   const startBtn = document.getElementById("startScan");
   const stopBtn = document.getElementById("stopScan");
@@ -8,17 +8,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let html5QrCode;
   let scanning = false;
-
   const VALID_QR_DATA = "TRAFFIC-VALID-12345";
 
   startBtn.addEventListener("click", async function () {
-
     try {
       html5QrCode = new Html5Qrcode("reader");
 
       const devices = await Html5Qrcode.getCameras();
-
-      if (devices.length === 0) {
+      if (!devices.length) {
         alert("No camera found");
         return;
       }
@@ -28,8 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
       await html5QrCode.start(
         cameraId,
         { fps: 10, qrbox: 250 },
-        function (decodedText) {
-
+        (decodedText) => {
           resultBox.classList.remove("hidden");
 
           if (decodedText === VALID_QR_DATA) {
@@ -40,8 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
             statusText.style.color = "red";
           }
 
-          detailsDiv.innerHTML =
-            "<p><strong>QR Content:</strong> " + decodedText + "</p>";
+          detailsDiv.innerHTML = `<p><strong>QR Content:</strong> ${decodedText}</p>`;
 
           stopScanner();
         }
@@ -52,7 +47,6 @@ document.addEventListener("DOMContentLoaded", function () {
       stopBtn.disabled = false;
 
     } catch (err) {
-      console.error(err);
       alert("Camera error: " + err.message);
     }
   });
