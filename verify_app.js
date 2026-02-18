@@ -1,93 +1,82 @@
-window.addEventListener("load", function () {
+import { db } from "./firebase-config.js";
+import {
+    doc,
+    getDoc,
+    collection,
+    addDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    const startBtn = document.getElementById("startScan");
-    const stopBtn = document.getElementById("stopScan");
-    const resultBox = document.getElementById("verifyResult");
-    const statusText = document.getElementById("statusText");
-    const detailsDiv = document.getElementById("details");
+window.verifyQR = async function () {
 
-    let html5QrCode;
-    let scanning = false;
+    const qrId = document.getElementById("qrInput").value.trim();
+    const resultBox = document.getElementById("resultBox");
 
-    startBtn.addEventListener("click", async function () {
-        try {
-            html5QrCode = new Html5Qrcode("reader");
-
-            // Get available cameras
-            const devices = await Html5Qrcode.getCameras();
-            if (!devices || devices.length === 0) {
-                alert("No camera found");
-                return;
-            }
-
-            const cameraId = devices[0].id;
-
-            // Start scanning
-            await html5QrCode.start(
-                cameraId,
-                { fps: 10, qrbox: 250 },
-                (decodedText) => {
-                    handleScan(decodedText);
-                }
-            );
-
-            scanning = true;
-            startBtn.disabled = true;
-            stopBtn.disabled = false;
-
-        } catch (err) {
-            alert("Camera error: " + err.message);
-        }
-    });
-
-    stopBtn.addEventListener("click", stopScanner);
-
-    async function stopScanner() {
-        if (html5QrCode && scanning) {
-            await html5QrCode.stop();
-            await html5QrCode.clear();
-            scanning = false;
-            startBtn.disabled = false;
-            stopBtn.disabled = true;
-        }
+    if (!qrId) {
+        alert("Enter License Number");
+        return;
     }
 
-    function handleScan(decodedText) {
-        resultBox.classList.remove("hidden");
+    resultBox.innerHTML = "<p>Checking...</p>";
 
-        try {
-            // Parse JSON from QR
-            const data = JSON.parse(decodedText);
+    try {
 
-            // Validate required fields
-            if (data.license && data.vehicle && data.name) {
-                statusText.innerText = "✅ Data is Correct";
-                statusText.style.color = "green";
+        const docRef = doc(db, "licenses", qrId);
+        const docSnap = await getDoc(docRef);
 
-                detailsDiv.innerHTML = `
-                    <p><strong>Name:</strong> ${data.name}</p>
-                    <p><strong>License:</strong> ${data.license}</p>
-                    <p><strong>Vehicle:</strong> ${data.vehicle}</p>
-                    <p><strong>PUC Number:</strong> ${data.pucNumber || "-"}</p>
-                    <p><strong>PUC Expiry:</strong> ${data.pucExpiry || "-"}</p>
-                    <p><strong>Expiry:</strong> ${data.expiry || "-"}</p>
-                    <p><strong>Created At:</strong> ${data.createdAt || "-"}</p>
-                `;
-            } else {
-                statusText.innerText = "❌ Invalid QR Code";
-                statusText.style.color = "red";
-                detailsDiv.innerHTML = `<p>QR Content: ${decodedText}</p>`;
-            }
+        if (docSnap.exists()) {
 
-        } catch (err) {
-            // Not valid JSON
-            statusText.innerText = "❌ Invalid QR Code";
-            statusText.style.color = "red";
-            detailsDiv.innerHTML = `<p>QR Content: ${decodedText}</p>`;
+            const data = docSnap.data();
+            const today = new Date().toISOString().split("T")[0];
+
+            const licenseValid = data.expiry >= today;
+            const pucValid = data.pucExpiry >= today;
+
+            resultBox.innerHTML = `
+                <h3 style="color:green;">✅ RECORD FOUND</h3>
+                <p><b>Name:</b> ${data.name}</p>
+                <p><b>License:</b> ${data.license}</p>
+                <p><b>Vehicle:</b> ${data.vehicle}</p>
+                <p><b>License Expiry:</b> ${data.expiry}</p>
+                <p><b>PUC Number:</b> ${data.pucNumber}</p>
+                <p><b>PUC Expiry:</b> ${data.pucExpiry}</p>
+                <p><b>Created At:</b> ${data.createdAt}</p>
+                <hr>
+                <p style="color:${licenseValid ? "green" : "red"};">
+                    License Status: ${licenseValid ? "VALID" : "EXPIRED"}
+                </p>
+                <p style="color:${pucValid ? "green" : "red"};">
+                    PUC Status: ${pucValid ? "VALID" : "EXPIRED"}
+                </p>
+            `;
+
+            // Log verification
+            await addDoc(collection(db, "verificationLogs"), {
+                license: qrId,
+                status: "FOUND",
+                licenseValid: licenseValid,
+                pucValid: pucValid,
+                timestamp: serverTimestamp()
+            });
+
+        } else {
+
+            resultBox.innerHTML = `
+                <h3 style="color:red;">❌ LICENSE NOT FOUND</h3>
+            `;
+
+            await addDoc(collection(db, "verificationLogs"), {
+                license: qrId,
+                status: "NOT_FOUND",
+                timestamp: serverTimestamp()
+            });
         }
 
-        // Stop scanning after reading
-        stopScanner();
-    }
+    } catch (error) {
 
-});
+        resultBox.innerHTML = `
+            <h3 style="color:red;">⚠ ERROR</h3>
+            <p>${error.message}</p>
+        `;
+    }
+};
