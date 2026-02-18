@@ -5,7 +5,7 @@ import {
     collection,
     addDoc,
     serverTimestamp
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore.js";
 
 window.verifyQR = async function () {
 
@@ -17,30 +17,28 @@ window.verifyQR = async function () {
         return;
     }
 
-    resultBox.innerHTML = "<p>Checking...</p>";
+    resultBox.innerHTML = "Checking...";
 
     try {
 
-        const docRef = doc(db, "licenses", qrId);
-        const docSnap = await getDoc(docRef);
+        // 🔍 Fetch License
+        const licenseRef = doc(db, "licenses", qrId);
+        const licenseSnap = await getDoc(licenseRef);
 
-        if (docSnap.exists()) {
+        if (licenseSnap.exists()) {
 
-            const data = docSnap.data();
+            const data = licenseSnap.data();
             const today = new Date().toISOString().split("T")[0];
 
             const licenseValid = data.expiry >= today;
             const pucValid = data.pucExpiry >= today;
 
             resultBox.innerHTML = `
-                <h3 style="color:green;">✅ RECORD FOUND</h3>
+                <h3 style="color:green;">✅ VALID RECORD</h3>
                 <p><b>Name:</b> ${data.name}</p>
-                <p><b>License:</b> ${data.license}</p>
                 <p><b>Vehicle:</b> ${data.vehicle}</p>
                 <p><b>License Expiry:</b> ${data.expiry}</p>
-                <p><b>PUC Number:</b> ${data.pucNumber}</p>
                 <p><b>PUC Expiry:</b> ${data.pucExpiry}</p>
-                <p><b>Created At:</b> ${data.createdAt}</p>
                 <hr>
                 <p style="color:${licenseValid ? "green" : "red"};">
                     License Status: ${licenseValid ? "VALID" : "EXPIRED"}
@@ -50,8 +48,10 @@ window.verifyQR = async function () {
                 </p>
             `;
 
-            // Log verification
-            await addDoc(collection(db, "verificationLogs"), {
+            // ✅ LOG FIXED VERSION
+            const logsCollection = collection(db, "verificationLogs");
+
+            await addDoc(logsCollection, {
                 license: qrId,
                 status: "FOUND",
                 licenseValid: licenseValid,
@@ -65,7 +65,9 @@ window.verifyQR = async function () {
                 <h3 style="color:red;">❌ LICENSE NOT FOUND</h3>
             `;
 
-            await addDoc(collection(db, "verificationLogs"), {
+            const logsCollection = collection(db, "verificationLogs");
+
+            await addDoc(logsCollection, {
                 license: qrId,
                 status: "NOT_FOUND",
                 timestamp: serverTimestamp()
@@ -73,7 +75,7 @@ window.verifyQR = async function () {
         }
 
     } catch (error) {
-
+        console.error(error);
         resultBox.innerHTML = `
             <h3 style="color:red;">⚠ ERROR</h3>
             <p>${error.message}</p>
