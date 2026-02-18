@@ -1,35 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verify QR</title>
-<style>
-  body { font-family: Arial; text-align: center; }
-  #reader { width: 100%; margin-bottom: 10px; }
-  button { padding: 10px 20px; margin: 5px; }
-  .hidden { display: none; }
-</style>
+    <title>Police QR Verification</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
 
-<h2>Verify QR</h2>
-<div id="reader"></div>
+<body style="font-family: Arial; text-align:center; padding:20px;">
 
-<button id="startScan">Start Scan</button>
-<button id="stopScan" disabled>Stop Scan</button>
+<h2>Police License Verification</h2>
 
-<div id="verifyResult" class="hidden">
-  <h3>Result</h3>
-  <p id="statusText"></p>
-  <div id="details"></div>
-</div>
+<input type="text" id="qrInput" placeholder="Scan or Enter License Number"
+       style="padding:10px; width:250px;">
+<br><br>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<button onclick="verifyQR()" style="padding:10px 20px;">
+    Verify
+</button>
 
+<div id="resultBox" style="margin-top:30px;"></div>
 
-<!-- Load your JS last, without defer -->
-<script src="verify_app.js"></script>
+<script type="module" src="verify_app.js"></script>
 
 </body>
 </html>
