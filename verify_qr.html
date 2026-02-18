@@ -1,26 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Police QR Verification</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Police License Verification</title>
+  <meta charset="UTF-8" />
 </head>
 
-<body style="font-family: Arial; text-align:center; padding:20px;">
+<body style="text-align:center; margin-top:100px; font-family:Arial">
 
-<h2>Police License Verification</h2>
+  <h2>Police License Verification</h2>
 
-<input type="text" id="qrInput" placeholder="Scan or Enter License Number"
-       style="padding:10px; width:250px;">
-<br><br>
+  <input type="text" id="qrInput" placeholder="Enter QR Code ID" />
+  <br><br>
+  <button onclick="verifyQR()">Verify</button>
 
-<button onclick="verifyQR()" style="padding:10px 20px;">
-    Verify
-</button>
+  <h3 id="result"></h3>
 
-<div id="resultBox" style="margin-top:30px;"></div>
-
-<script type="module" src="verify_app.js"></script>
+  <!-- Load JS -->
+  <script type="module" src="verify_app.js"></script>
 
 </body>
 </html>
