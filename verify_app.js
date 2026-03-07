@@ -1,20 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, getDoc }
-  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+```javascript
+/* ---------------- Get QR ID from URL ---------------- */
 
-const firebaseConfig = {
-  apiKey: "AIzaSyAVWRJFpMoksy3PFetDie5hVXPI5tQJM4w",
-  authDomain: "smart-traffic-c5998.firebaseapp.com",
-  projectId: "smart-traffic-c5998",
-  storageBucket: "smart-traffic-c5998.firebasestorage.app",
-  messagingSenderId: "218505366734",
-  appId: "1:218505366734:web:4beba71abf4f1df282d49f"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// 🔹 Get ID from URL
 const params = new URLSearchParams(window.location.search);
 const qrID = params.get("id");
 
@@ -26,30 +12,62 @@ if (!qrID) {
   verifyQR(qrID);
 }
 
+/* ---------------- Verify QR using Firestore REST API ---------------- */
+
 async function verifyQR(qrID) {
 
+  const url =
+    "https://firestore.googleapis.com/v1/projects/smart-traffic-c5998/databases/(default)/documents/vehicles/" +
+    qrID;
+
   try {
-    const docRef = doc(db, "vehicles", qrID);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
+    const response = await fetch(url);
 
-      const data = docSnap.data();
+    if (response.status === 200) {
+
+      const data = await response.json();
+
+      const fields = data.fields;
+
+      const name = fields.name?.stringValue || "N/A";
+      const vehicle = fields.vehicle?.stringValue || "N/A";
+      const license = fields.license?.stringValue || "N/A";
+      const expiry = fields.expiry?.stringValue || "N/A";
 
       result.innerHTML = `
-        ✅ VERIFIED <br><br>
-        Name: ${data.name} <br>
-        Vehicle: ${data.vehicle} <br>
-        License: ${data.license} <br>
-        Expiry: ${data.expiry}
+        <h2 style="color:green;">✅ VERIFIED</h2>
+        <p><b>Name:</b> ${name}</p>
+        <p><b>Vehicle:</b> ${vehicle}</p>
+        <p><b>License:</b> ${license}</p>
+        <p><b>Expiry:</b> ${expiry}</p>
       `;
 
-    } else {
-      result.innerHTML = "❌ NOT FOUND";
+    } 
+    else if (response.status === 404) {
+
+      result.innerHTML = `
+        <h2 style="color:red;">❌ NOT FOUND</h2>
+        <p>Invalid QR Code</p>
+      `;
+
+    } 
+    else {
+
+      result.innerHTML = `
+        <h2 style="color:red;">Error verifying QR</h2>
+      `;
+
     }
 
   } catch (error) {
+
     console.error(error);
-    result.innerHTML = "Error verifying";
+
+    result.innerHTML = `
+      <h2 style="color:red;">Server Error</h2>
+    `;
+
   }
 }
+```
