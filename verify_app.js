@@ -12,7 +12,7 @@ if (!qrID) {
 async function verifyQR(qrID) {
 
   const url =
-  "https://firestore.googleapis.com/v1/projects/smart-traffic-c5998/databases/(default)/documents/vehicles/" + qrID;
+  "https://firestore.googleapis.com/v1/projects/smart-traffic-c5998/databases/(default)/documents/vehicles/latest" + qrID;
 
   try {
 
