@@ -85,3 +85,6 @@ async function verifyQR(qrID) {
 
   }
 }
+
+console.log("QR ID:", qrID);
+console.log("Firestore URL:", url);
