@@ -12,7 +12,7 @@ if (!qrID) {
 async function verifyQR(qrID) {
 
   const url =
-  "https://firestore.googleapis.com/v1/projects/smart-traffic-c5998/databases/(default)/documents/vehicles/latest" + qrID;
+  "https://firestore.googleapis.com/v1/projects/smart-traffic-c5998/databases/(default)/documents/vehicles/" + qrID;
 
   try {
 
@@ -26,23 +26,39 @@ async function verifyQR(qrID) {
       const name = fields.name?.stringValue || "N/A";
       const vehicle = fields.vehicle?.stringValue || "N/A";
       const license = fields.license?.stringValue || "N/A";
-      const expiry = fields.expiry?.stringValue || "N/A";
 
-      let pucStatus = "✅ PUC VALID";
+      const pucExpiry = fields.expiry?.stringValue || "N/A";
+      const licenseExpiry = fields.licenseExpiry?.stringValue || "N/A";
 
       const today = new Date();
-      const expiryDate = new Date(expiry);
 
-      if (expiryDate < today) {
+      // PUC status
+      let pucStatus = "✅ PUC VALID";
+      const pucDate = new Date(pucExpiry);
+      if (pucDate < today) {
         pucStatus = "❌ PUC EXPIRED";
+      }
+
+      // License status
+      let licenseStatus = "✅ LICENSE VALID";
+      const licDate = new Date(licenseExpiry);
+      if (licDate < today) {
+        licenseStatus = "❌ LICENSE EXPIRED";
       }
 
       result.innerHTML = `
         <h2 style="color:green;">✅ VERIFIED</h2>
+
         <p><b>Name:</b> ${name}</p>
         <p><b>Vehicle:</b> ${vehicle}</p>
-        <p><b>License:</b> ${license}</p>
-        <p><b>PUC Expiry:</b> ${expiry}</p>
+
+        <p><b>License Number:</b> ${license}</p>
+        <p><b>License Expiry:</b> ${licenseExpiry}</p>
+        <p>${licenseStatus}</p>
+
+        <hr>
+
+        <p><b>PUC Expiry:</b> ${pucExpiry}</p>
         <p>${pucStatus}</p>
       `;
 
