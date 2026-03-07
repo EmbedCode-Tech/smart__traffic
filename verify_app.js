@@ -84,7 +84,8 @@ async function verifyQR(qrID) {
     result.innerHTML = "Server Error";
 
   }
+  console.log("QR ID:", qrID);
+console.log("Firestore URL:", url);
 }
 
-console.log("QR ID:", qrID);
-console.log("Firestore URL:", url);
+
