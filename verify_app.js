@@ -1,5 +1,4 @@
-```javascript
-/* ---------------- Get QR ID from URL ---------------- */
+
 
 const params = new URLSearchParams(window.location.search);
 const qrID = params.get("id");
@@ -12,7 +11,7 @@ if (!qrID) {
   verifyQR(qrID);
 }
 
-/* ---------------- Verify QR using Firestore REST API ---------------- */
+
 
 async function verifyQR(qrID) {
 
@@ -70,4 +69,4 @@ async function verifyQR(qrID) {
 
   }
 }
-```
+
